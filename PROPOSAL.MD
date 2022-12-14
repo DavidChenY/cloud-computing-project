@@ -30,13 +30,13 @@ Check logs and traces of Dynatrace
 
 
 ## Responsibilities
-* Adzaga, Mateo
+* Adzaga, Mateo (k11776022)
 	* Implement Microservice ui
 	* Set up dynatrace monitoring for kubernetes cluster
-* Chen, David
+* Chen, David (k11802918)
 	* Implement Microservice calculator
 	* Create and deploy cluster on kubernetes
-* Peham, Jakob
+* Peham, Jakob (k11740714)
 	* Implement Microservice db
 	* Implement docker images
 
