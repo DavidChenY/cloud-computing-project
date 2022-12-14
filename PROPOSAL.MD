@@ -2,7 +2,7 @@
 # Project proposal
 
 ## Definition
-Exploring Dynatrace to observe an application consisting of 3 microservices
+Explore Dynatrace to observe an application consisting of 3 microservices running on a Kubernetes cluster.
 
 ## Scope
 ### Structure
