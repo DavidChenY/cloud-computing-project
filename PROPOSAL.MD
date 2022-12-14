@@ -2,14 +2,14 @@
 # Project proposal
 
 ## Definition
-Project idea: Exploring Dynatrace to observe an application consisting of 3 microservices
+Exploring Dynatrace to observe an application consisting of 3 microservices
 
 ## Scope
 ### Structure
 Three microservices:
-* Microservice 1 - (name): Frontend with input fields
-* Microservice 2 - (name): Backend with database
-* Microservice 3 - (name): Backend with calculation
+* Microservice 1 - ui: Frontend with input fields
+* Microservice 2 - db: Backend with database
+* Microservice 3 - calculator: Backend for calculations
 
 ### Functionality
 The microservices interact in following ways:
@@ -31,13 +31,13 @@ Check logs and traces of Dynatrace
 
 ## Responsibilities
 * Adzaga, Mateo
-	* Implement Microservice x
+	* Implement Microservice ui
 	* Set up dynatrace monitoring for kubernetes cluster
 * Chen, David
-	* Implement Microservice x
+	* Implement Microservice calculator
 	* Create and deploy cluster on kubernetes
 * Peham, Jakob
-	* Implement Microservice x
+	* Implement Microservice db
 	* Implement docker images
 
 * Helping and checking in on others (all)
