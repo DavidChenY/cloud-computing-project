@@ -14,6 +14,17 @@ Three microservices:
 Architecture Diagram
 ![alt text](https://github.com/DavidChenY/cloud-computing-project/blob/main/architecture.png)
 
+
+### Functionality
+The microservices interact in following ways:
+* Microservice 1 allows the user to input certain numbers which get sent to Microservice 2.
+* Microservice 2 stores the requested numbers and forwards these to Microservice 3.
+* Microservice 3 calculates our special formula and returns the result back to Microservice 2.
+* Microservice 2 stores the result to the respective numbers and returns to Microservice 1.
+* Microservice 1 shows the input numbers and the result back to the user.
+* The formula results in unexpected behavior when calculated with certain numbers.
+* Dynatrace observes the microservices when in normal operation as well as when Microservice 3 becomes ‘unhealthy’ due to infinite calculation.
+
 ## Dynatrace
 ### Technology support
 * React (Fetch API and 12, 14, 16, 18 in node.js)
@@ -29,17 +40,9 @@ Log files stored on the kubernetes node are automatically identified on the “/
 * Manual adding:
 Alternatively we can log them manually, if the Autodiscovery doesn’t work for some reason. This is only used as a last resort.
 
+For distributed tracing we will use the PurePath technology:
+* Applications can be instrumented to produce traces with the OneAgent
 
-
-### Functionality
-The microservices interact in following ways:
-* Microservice 1 allows the user to input certain numbers which get sent to Microservice 2.
-* Microservice 2 stores the requested numbers and forwards these to Microservice 3.
-* Microservice 3 calculates our special formula and returns the result back to Microservice 2.
-* Microservice 2 stores the result to the respective numbers and returns to Microservice 1.
-* Microservice 1 shows the input numbers and the result back to the user.
-* The formula results in unexpected behavior when calculated with certain numbers.
-* Dynatrace observes the microservices when in normal operation as well as when Microservice 3 becomes ‘unhealthy’ due to infinite calculation.
 
 ## Milestones
 Implement microservices
