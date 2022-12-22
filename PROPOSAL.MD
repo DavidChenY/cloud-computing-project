@@ -8,8 +8,28 @@ Explore Dynatrace to observe an application consisting of 3 microservices runnin
 ### Structure
 Three microservices:
 * Microservice 1 - ui: Frontend with input fields
-* Microservice 2 - db: Backend with database
+* Microservice 2 - storage: Backend with database
 * Microservice 3 - calculator: Backend for calculations
+
+Architecture Diagram
+![alt text](https://github.com/DavidChenY/cloud-computing-project/blob/main/architecture.png)
+
+## Dynatrace
+### Technology support
+* React (Fetch API and 12, 14, 16, 18 in node.js)
+* Java (full support)
+* MySQL (Version 2.x)
+
+All used technologies are supported by Dynatrace.
+We will setup dynatrace for our cluster using following tutorial https://learn.dynatracelabs.com/workshops/kubernetes-gke/index.html?index=..%2F..index#0
+
+Obtaining logs:
+* Autodiscovery: 
+Log files stored on the kubernetes node are automatically identified on the “/var/log/pods” folder by the OneAgent. For this to be possible we have to use docker, marked as important, writing logs to “stdout/stderr” streams and the log files in “/var/log/pods” have to be existing for at least a minute (as the files are analyzed every 60 seconds)
+* Manual adding:
+Alternatively we can log them manually, if the Autodiscovery doesn’t work for some reason. This is only used as a last resort.
+
+
 
 ### Functionality
 The microservices interact in following ways:
@@ -37,7 +57,7 @@ Check logs and traces of Dynatrace
 	* Implement Microservice calculator
 	* Create and deploy cluster on kubernetes
 * Peham, Jakob (k11740714)
-	* Implement Microservice db
+	* Implement Microservice storage
 	* Implement docker images
 
 * Helping and checking in on others (all)
