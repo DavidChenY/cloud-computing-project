@@ -1,12 +1,14 @@
 package at.jku.storage.controller;
 
+import at.jku.storage.entity.Request;
 import at.jku.storage.entity.Result;
 import at.jku.storage.repository.ResultRepository;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
@@ -33,16 +35,17 @@ public class ResultController {
     }
 
     @PostMapping("/calculate")
-    public int calculate(@RequestParam int first, @RequestParam int second) {
-        Optional<Result> resultOptional = repository.load(first, second);
+    @ResponseBody
+    public ResponseEntity<Object> calculate(@RequestBody Request request) {
+        Optional<Result> resultOptional = repository.load(request.getFirstNumber(), request.getSecondNumber());
 
         if(resultOptional.isPresent()) {
-            return resultOptional.get().getResult();
+            return returnJSON("result", resultOptional.get().getResult());
+        } else {
+            int result = callCalculator(request.getFirstNumber(), request.getSecondNumber());
+            repository.save(new Result(request.getFirstNumber(), request.getSecondNumber(), result));
+            return returnJSON("result", result);
         }
-
-        int result = callCalculator(first, second);
-        repository.save(new Result(first, second, result));
-        return result;
     }
 
     private int callCalculator(int first, int second) {
@@ -51,5 +54,11 @@ public class ResultController {
                 .get().uri(uri).retrieve();
 
         return clientResponse.bodyToMono(Integer.class).block();
+    }
+
+    private ResponseEntity<Object> returnJSON(String key, int value) {
+        JSONObject entity = new JSONObject();
+        entity.put(key, value);
+        return new ResponseEntity<>(entity, HttpStatus.OK);
     }
 }
