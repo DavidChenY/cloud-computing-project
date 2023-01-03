@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@RequestMapping("/storage")
+@RequestMapping("/api")
 public class ResultController {
 
     final ResultRepository repository;
