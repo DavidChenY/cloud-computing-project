@@ -8,11 +8,11 @@ public class Result {
     private int id;
     private int first;
     private int second;
-    private int result;
+    private float result;
 
     protected Result() {}
 
-    public Result(int first, int second, int result) {
+    public Result(int first, int second, float result) {
         this.id = _ID.incrementAndGet();
         this.first = first;
         this.second = second;
@@ -40,7 +40,7 @@ public class Result {
         return second;
     }
 
-    public int getResult() {
+    public float getResult() {
         return result;
     }
 }
