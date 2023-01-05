@@ -1,9 +1,9 @@
 package at.jku.storage.controller;
 
+import at.jku.storage.domain.dto.Calculation;
 import at.jku.storage.entity.Request;
 import at.jku.storage.entity.Result;
-import at.jku.storage.entity.Test;
-import at.jku.storage.repository.ResultRepository;
+import at.jku.storage.repository.CalculationRepository;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,40 +14,29 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Objects;
-import java.util.Optional;
 
-@RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api")
-public class ResultController {
+@RestController
+public class CalculationController {
 
-    final ResultRepository repository;
+    private final CalculationRepository calculationRepository;
 
     @Autowired
-    public ResultController(ResultRepository repository) {
-        this.repository = repository;
-    }
-
-    @GetMapping("/health")
-    public String test() {
-        return "200 - OK";
-    }
-
-    @GetMapping("/mock")
-    public int mock() {
-        return 123;
+    public CalculationController(CalculationRepository calculationRepository) {
+        this.calculationRepository = calculationRepository;
     }
 
     @PostMapping("/calculate")
     @ResponseBody
     public ResponseEntity<Object> calculate(@RequestBody Request request) {
-        Optional<Result> resultOptional = repository.load(request.getFirstNumber(), request.getSecondNumber());
+        Calculation calculation = calculationRepository.findByFirstNumberAndSecondNumberAndOperation(request.getFirstNumber(), request.getSecondNumber(), request.getOperation());
 
-        if(resultOptional.isPresent()) {
-            return returnJSON("result", resultOptional.get().getResult());
+        if(calculation != null) {
+            return returnJSON("result", calculation.getResult());
         } else {
             float result = callCalculator(request.getFirstNumber(), request.getSecondNumber(), request.getOperation());
-            repository.save(new Result(request.getFirstNumber(), request.getSecondNumber(), result));
+            calculationRepository.save(new Calculation(request.getFirstNumber(), request.getSecondNumber(), request.getOperation(), result));
             return returnJSON("result", result);
         }
     }
@@ -58,7 +47,7 @@ public class ResultController {
         WebClient.ResponseSpec clientResponse = WebClient.builder().build()
                 .post().uri(uri).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromValue(body)).retrieve();
 
-        return Objects.requireNonNull(clientResponse.bodyToMono(Test.class).block()).getResult();
+        return Objects.requireNonNull(clientResponse.bodyToMono(Result.class).block()).getResult();
     }
 
     private String getBody(int first, int second, String operation) {

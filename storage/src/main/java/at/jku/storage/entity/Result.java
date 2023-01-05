@@ -1,46 +1,21 @@
 package at.jku.storage.entity;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class Result {
 
-    private static final AtomicInteger _ID = new AtomicInteger(0);
-    private int id;
-    private int first;
-    private int second;
-    private float result;
+    float result;
 
-    protected Result() {}
-
-    public Result(int first, int second, float result) {
-        this.id = _ID.incrementAndGet();
-        this.first = first;
-        this.second = second;
+    public Result(float result) {
         this.result = result;
     }
 
-    @Override
-    public String toString() {
-        return "Result{" +
-                "first=" + first +
-                ", second=" + second +
-                ", result=" + result +
-                '}';
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public int getFirst() {
-        return first;
-    }
-
-    public int getSecond() {
-        return second;
+    public Result() {
     }
 
     public float getResult() {
         return result;
+    }
+
+    public void setResult(float result) {
+        this.result = result;
     }
 }
