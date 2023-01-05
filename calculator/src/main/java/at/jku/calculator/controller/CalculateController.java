@@ -1,10 +1,8 @@
 package at.jku.calculator.controller;
 
 import at.jku.calculator.entity.Request;
+import at.jku.calculator.entity.Result;
 import jakarta.websocket.server.PathParam;
-import net.minidev.json.JSONObject;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,35 +24,31 @@ public class CalculateController {
     }
 
     @PostMapping("calculate")
-    public ResponseEntity<Object> calculate(@RequestBody Request request) {
-        float result = mysteriousFunction(request.getFirstNumber(), request.getSecondNumber(), request.getOperation());
-        JSONObject entity = new JSONObject();
-        entity.put("result", result);
-        return new ResponseEntity<>(entity, HttpStatus.OK);
+    public Result calculate(@RequestBody Request request) {
+        float result = calculate(request.getFirstNumber(), request.getSecondNumber(), request.getOperation());
+        return new Result(result);
     }
 
-    private float mysteriousFunction(int firstNumber, int secondNumber, String operation) {
-        float result;
-        if(firstNumber==0 || firstNumber==1)
-            return 1f;
+    private float calculate(int firstNumber, int secondNumber, String operation) {
+        float result = 0;
 
-        if(secondNumber==0 || secondNumber==1)
-            return 1f;
-
-        switch(operation){
-            case "+":
-                result = mysteriousFunction(firstNumber-1, secondNumber-1, operation) * firstNumber + mysteriousFunction(firstNumber-1, secondNumber-1, operation) * secondNumber;
-                break;
-            case "-":
-                result = mysteriousFunction(firstNumber-1, secondNumber-1, operation) * firstNumber - mysteriousFunction(firstNumber-1, secondNumber-1, operation) * secondNumber;
-                break;
-            case "*":
-                result = mysteriousFunction(firstNumber-1, secondNumber-1, operation) * firstNumber * mysteriousFunction(firstNumber-1, secondNumber-1, operation) * secondNumber;
-                break;
-            case "/":
-                result = mysteriousFunction(firstNumber-1, secondNumber-1, operation) * firstNumber / mysteriousFunction(firstNumber-1, secondNumber-1, operation) * secondNumber;
-                break;
-            default: return -1;
+        switch (operation) {
+            case "+" -> result = firstNumber + secondNumber;
+            case "-" -> result = firstNumber - secondNumber;
+            case "*" -> {
+                int count = 0;
+                // run into very long loop with negative numbers
+                while (count != secondNumber) {
+                    result += firstNumber;
+                    count++;
+                }
+            }
+            case "/" -> result = firstNumber / secondNumber; // can throw divide by zero
+            default -> {
+                // crash the application
+                System.exit(1);
+                return -1;
+            }
         }
         return result;
     }
