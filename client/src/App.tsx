@@ -9,6 +9,8 @@ const App = () => {
   const [operation, setOperation] = useState('+');
   const [firstNumber, setFirstNumber] = useState(0);
   const [secondNumber, setSecondNumber] = useState(0);
+  const [result, setResult] = useState(0);
+
 
   const calculate = () => {
     const data: ICalculation = {
@@ -20,6 +22,7 @@ const App = () => {
     calculatorService.calculate(data)
       .then((response: any) => {
         console.log(response.data);
+        setResult(response.data.result);
       })
       .catch((e: Error) => {
         console.log(e);
@@ -49,6 +52,9 @@ const App = () => {
             Selected operation: {operation}
           </div>
           <button type="submit" value="Submit" className='btn btn-primary' onClick={() => calculate()}>Calculate</button>
+          <div>
+              Result: {result}
+          </div>
       </header>
     </div>
   );
