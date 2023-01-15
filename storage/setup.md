@@ -17,9 +17,8 @@
 kubectl apply -f mysql-pv.yaml
 kubectl apply -f mysql-deployment.yaml
 
-kubectl run calculator --image=davidchen98/calculator
+kubectl apply -f deployment.yaml
 kubectl apply -f service.yaml
-kubectl describe service calculator
  ```
 
 
