@@ -46,3 +46,15 @@ spec:
         - name: mysql-persistent-storage
           persistentVolumeClaim:
             claimName: mysql-volumeclaim
+          configMap:
+            name: mysql-initdb-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-initdb-config
+data:
+  initdb.sql: |
+    create database cloudcomputing;
+    create user 'springuser'@'%' identified by 'ThePassword';
+    grant all on cloudcomputing.* to 'springuser'@'%';
