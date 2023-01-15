@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: storage
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: storage
@@ -16,4 +16,9 @@ spec:
       - name: storage
         image: davidchen98/storage
         ports:
-        - containerPort: 8888
+        - containerPort: 8080
+        env:
+          - name: DB_HOST
+            value: mysql
+          - name: CALCULATOR_HOST
+            value: calculator
