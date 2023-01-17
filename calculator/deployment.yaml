@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: calculator
+  name: calculator-service
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: calculator
+      app: calculator-service
   template:
     metadata:
       labels:
-        app: calculator
+        app: calculator-service
     spec:
       containers:
-      - name: calculator
+      - name: calculator-service
         image: davidchen98/calculator
         ports:
         - containerPort: 8081
