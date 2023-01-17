@@ -1,24 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: storage
+  name: storage-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: storage
+      app: storage-service
   template:
     metadata:
       labels:
-        app: storage
+        app: storage-service
     spec:
       containers:
-      - name: storage
+      - name: storage-service
         image: davidchen98/storage
         ports:
         - containerPort: 8080
+          name: http
+          protocol: TCP
         env:
           - name: DB_HOST
             value: mysql
           - name: CALCULATOR_HOST
-            value: calculator
+            value: calculator-service
