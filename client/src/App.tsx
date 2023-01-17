@@ -47,6 +47,7 @@ const App = () => {
             <input type="button" className="btn btn-secondary" value="-" onClick={() => setOperation('-')} />
             <input type="button" className="btn btn-secondary" value="*" onClick={() => setOperation('*')} />
             <input type="button" className="btn btn-secondary" value="/" onClick={() => setOperation('/')} />
+            <input type="button" className="btn btn-secondary" value="%" onClick={() => setOperation('%')} />
           </div>
           <div>
             Selected operation: {operation}

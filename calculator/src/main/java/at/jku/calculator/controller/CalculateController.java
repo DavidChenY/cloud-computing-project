@@ -3,6 +3,9 @@ package at.jku.calculator.controller;
 import at.jku.calculator.entity.Request;
 import at.jku.calculator.entity.Result;
 import jakarta.websocket.server.PathParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +16,13 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/")
 public class CalculateController {
+
+    private final Logger logger = LoggerFactory.getLogger(CalculateController.class);
+
+    @Autowired
+    public CalculateController() {
+    }
+
     @GetMapping("random")
     public int getRandomNumber() {
         return new Random().nextInt();
@@ -31,7 +41,7 @@ public class CalculateController {
 
     private float calculate(int firstNumber, int secondNumber, String operation) {
         float result = 0;
-
+        logger.info("calculate: {} {} {} ", firstNumber, operation, secondNumber);
         switch (operation) {
             case "+" -> result = firstNumber + secondNumber;
             case "-" -> result = firstNumber - secondNumber;
@@ -45,6 +55,7 @@ public class CalculateController {
             }
             case "/" -> result = firstNumber / secondNumber; // can throw divide by zero
             default -> {
+                logger.error("about to crash");
                 // crash the application
                 System.exit(1);
                 return -1;
