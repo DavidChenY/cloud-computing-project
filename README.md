@@ -22,15 +22,17 @@ The .jar files are created and the docker image is built with exposed ports as d
 ### Deploy container on kubernetes
 The docker container are pushed onto the docker-hub for kubernetes.
 Kubernetes configurations are applied to add the docker container to the kubernetes infrastructure.
-This is done for all 3 microserivces.
+This is done for all 3 microservices.
 
 ### Add load-balancer and mysql externally
-In order for the client UI to work properly, we had to add a load-balancer for it.
-A MySQL service had to be created specifically.
+The MySQL needed be configured with kubernetes instead of just having a docker image. 
+It required two scripts which first claims the space and the creates the mysql service.
+In order for the client UI to work properly, we had to add the URL of load-balancer for the storage for it manually.
 
 ### Setup dynatrace
-Registrate for dynatrace monitoring and execute the generated .yaml-files to add dynatrace onto the project.
+Register for dynatrace monitoring and execute the generated .yaml-files to add dynatrace onto the project.
 We also added the dynatrace-operator from the marketplace, though that should not be necessary.
+We can see log and requests in dynatrace.
 
 ## Setup instructions
 
@@ -117,12 +119,12 @@ ADD IMAGE
 5. Copy .yaml file to the project folder
 6. Copy and execute the commands listed below
 
- ```console
+```console
 kubectl create namespace dynatrace
 kubectl apply -f https://github.com/Dynatrace/dynatrace-operator/releases/download/v0.10.1/kubernetes.yaml
 kubectl -n dynatrace wait pod --for=condition=ready --selector=app.kubernetes.io/name=dynatrace-operator,app.kubernetes.io/component=webhook --timeout=300s
 kubectl apply -f dynakube.yaml
- ```
+```
 
 7. Errors in the workloads may occur. 
 8. If that is the case wait a bit, or go to the cluster and increase node size of the default pool.
@@ -144,7 +146,29 @@ kubectl rollout restart deployment client -n default
 4. Go to the 3 dots and press edit 
 5. Capturing -> Async web requests and SPAs and enable Capture XmlHttpRequest and Capture fetch requests
 
- ## Summary of lessons learned
+## Summary of lessons learned
 
- ### Dynatrace log monitoring
- The log monitoring in dynatrace is definitely not easy and out-of-the-box. We had a lot of issues as at first the whole services were not recognized. We followed several tutorials from dynatrace on how to setup the monitoring correctly, which ultimately had either wrong version and thus different UI so they were not extremely helpful, or they did not work or solve the problem. Ultimately the solution to a whole lot of problems was to rename our microservices to have the name "service" in their actual name.
+### Kubernetes tutorial for MySQL does not fully work for GKE
+Tutorial for PersistentVolume creation from kubernetes does not work for GKE
+* GKE does not require the PersistentVolume section, only the PersistentVolumeClaim
+
+
+### Dynatrace issues:
+
+### Unscheduable pods from dynatrace
+The pods were unscheduable according to GKE. We had to increase the number of nodes to get it working in our initial setup.
+
+### Agent not injected
+In our initial setup we had a NodeJs application. That way the application was not discovered as a service. Changing it to
+a nginx with static files solved that issue. Additionaly the pods needed to be restarted or else the injections wouldn't happen.
+
+### Fetch not traced
+We expected Dynatrace to automatically check the requests made from the page and it took us some time to find out about the setting for it.
+
+### Dynatrace log monitoring
+Logs were not discovered at first, they also needed to be added in sources until they were shown.
+
+### Service discovery
+Arguably the biggest amout of time was spend trying to get the service discovery working which in the end still didnt fully work. According to the page there shouldnt be any extra rules required and it worked for the client after some docker changes.
+We followed several tutorials from dynatrace on how to setup the monitoring correctly, which ultimately had either wrong version and thus different UI so they were not extremely helpful, or they did not work or solve the problem. 
+In the end we manually added some custom service detection rules to see our services. However, doing so doesn't seem to work well with the distributed path tracing.
