@@ -136,11 +136,13 @@ kubectl rollout restart deployment client -n default
 
 10. Go to settings -> Log monitoring -> Log sources and storage
 11. Select all host names and save changes
-12. (Optional) Go to Service Detection -> Custom service detection -> Define Java services
-13. Add name -> find entry point -> select process group -> select process -> select rest controller
-14. Go to Applications & Microservices -> Frontend and select the application
-15. Go to the 3 dots and press edit
-16. Capturing -> Async web requests and SPAs and enable Capture XmlHttpRequest and Capture fetch requests
+
+(Optional) 
+1. Go to Service Detection -> Custom service detection -> Define Java services
+2. Add name -> find entry point -> select process group -> select process -> select rest controller
+3. Go to Applications & Microservices -> Frontend and select the application 
+4. Go to the 3 dots and press edit 
+5. Capturing -> Async web requests and SPAs and enable Capture XmlHttpRequest and Capture fetch requests
 
  ## Summary of lessons learned
 
