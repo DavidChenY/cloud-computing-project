@@ -39,12 +39,14 @@ We also added the dynatrace-operator from the marketplace, though that should no
 1. Create project and connect via gcloud auth login
 2. Menu -> Kubernetes Engine -> Enable Kubernetes Engine API
 3. Cluster -> Create cluster
-4. "You manage your cluster: Create"
-5. Give name to cluster
+4. Select "You manage your cluster: Create"
+5. Give a name to the cluster
 6. Go to default pool -> increase number of nodes if needed
-7. Create
+7. Click on "Create"
 8. Get connection command and connect to cluster via terminal
-   gcloud container clusters get-credentials cluster-1 --zone us-central1-c --project cloudcomputingproject-375018
+```console
+gcloud container clusters get-credentials cluster-1 --zone us-central1-c --project cloudcomputingproject-375018
+```
 
 ### Calculator service
 
@@ -86,7 +88,10 @@ kubectl apply -f service.yaml
 ```
 
 ### Client service
-1. Create the docker image and push it to docker hub
+1. Get the storage-service load-balancer IP from Google Cloud
+2. Put the IP into the http-commons.ts in the Base URL
+
+3. Create the docker image and push it to docker hub
 ```console
 cd ../client
 
@@ -94,13 +99,23 @@ docker image build -f Dockerfile -t davidchen98/client ./
 docker push davidchen98/client
 ```
 
-2. Create configurations for storage service
+4. Create configurations for storage service
 ```console
 kubectl apply -f deployment.yaml
-kubectl apply -f load-balancer.yaml
+kubectl apply -f service.yaml
 ```
 
+5. Access the client page by the endpoint
+
 ### Dynatrace setup
+
+1. Log in to dynatrace, start installation
+2. Select Kubernetes
+3. Add name, create tokens
+4. enable skip ssl certificate, enable volume storage
+ADD IMAGE
+5. Copy .yaml file to the project folder
+6. Copy and execute the commands listed below
 
  ```console
 kubectl create namespace dynatrace
@@ -108,6 +123,24 @@ kubectl apply -f https://github.com/Dynatrace/dynatrace-operator/releases/downlo
 kubectl -n dynatrace wait pod --for=condition=ready --selector=app.kubernetes.io/name=dynatrace-operator,app.kubernetes.io/component=webhook --timeout=300s
 kubectl apply -f dynakube.yaml
  ```
+
+7. Errors in the workloads may occur. 
+8. If that is the case wait a bit, or go to the cluster and increase node size of the default pool.
+9. Wait and restart all pods
+
+```console
+kubectl rollout restart deployment calculator-service -n default
+kubectl rollout restart deployment storage-service -n default
+kubectl rollout restart deployment client -n default
+```
+
+10. Go to settings -> Log monitoring -> Log sources and storage
+11. Select all host names and save changes
+12. (Optional) Go to Service Detection -> Custom service detection -> Define Java services
+13. Add name -> find entry point -> select process group -> select process -> select rest controller
+14. Go to Applications & Microservices -> Frontend and select the application
+15. Go to the 3 dots and press edit
+16. Capturing -> Async web requests and SPAs and enable Capture XmlHttpRequest and Capture fetch requests
 
  ## Summary of lessons learned
 
